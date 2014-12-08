@@ -37,11 +37,11 @@ class MaterialAppStyle {
     Color_RGBA accent_fallback1; // 100 colour
     Color_RGBA accent_fallback2; // 400 colour
 
-	/**
-	 * We can just use this for storage.
-	 * Fields can be null.
-	 */
-	this() {}
+    /**
+     * We can just use this for storage.
+     * Fields can be null.
+     */
+    this() {}
 
     this(string primary = "Indigo", string accentName = "Pink") {
         primary_hue1 = palette.lookup(primary ~ " 500 - Primary");
@@ -58,13 +58,13 @@ class MaterialAppStyle {
             return primary_hue1;
         }
 
-		/**
-		 * If we want to use custom colours not based upon the spec.
-		 * Use this to grab the palette.
-		 */
-		ACOPalette colorPaletteUsed() {
-			return palette;
-		}
+        /**
+         * If we want to use custom colours not based upon the spec.
+         * Use this to grab the palette.
+         */
+        ACOPalette colorPaletteUsed() {
+            return palette;
+        }
     }
 
     /**
@@ -88,11 +88,11 @@ class MaterialAppStyle {
 
 private {
     import devisualization.util.photoshop_aco;
-	/*
-	 * Basically a palette provided from Google as part of the Material spec
-	 *	 is compiled into the program (~60kb once bin2d'd) which is used.
-	 * Not swapable.
-	 */
+    /*
+     * Basically a palette provided from Google as part of the Material spec
+     *     is compiled into the program (~60kb once bin2d'd) which is used.
+     * Not swapable.
+     */
     __gshared ACOPalette palette;
 
     shared static this() {
