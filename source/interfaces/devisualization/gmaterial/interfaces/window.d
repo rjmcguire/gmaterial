@@ -28,6 +28,10 @@ import devisualization.window.interfaces.window;
 import devisualization.scenegraph.interfaces;
 
 interface IMaterialWindow {
+	//this(uint width, uint height);
+	//this(Windowable window);
+	//this(Windowable window, SceneGraph2D graph);
+
     @property {
         ILayout layout();
         SceneGraph2D graph();
