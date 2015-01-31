@@ -21,11 +21,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-module devisualization.gmaterial.interfaces.control;
-import devisualization.scenegraph.interfaces;
+module devisualization.gmaterial.interfaces.controlids;
 
-abstract class Control : Drawable2DElement {
-    void draw(Element2D e) {
+private __gshared {
+	string[] idFromName;
+}
 
-    }
+/**
+ * Get/create a unique identifying number for a symbol
+ * 
+ * Params:
+ * 		fqn	=	Fully qualified name of symbol
+ * 
+ * Returns:
+ * 		A given unqiue identifier for type
+ */
+ushort getControlId(T)(T t) {
+	return getControlId(typeid(t).name);
+}
+
+/**
+ * Get/create a unique identifying number for a symbol
+ * 
+ * Params:
+ * 		fqn	=	Fully qualified name of symbol
+ * 
+ * Returns:
+ * 		A given unqiue identifier for type
+ */
+ushort getControlId(T)() {
+	import std.traits : fullyQualifiedName;
+	return getControlId(fullyQualifiedName!T);
+}
+
+/**
+ * Get/create a unique identifying number for a symbol
+ * 
+ * Params:
+ * 		fqn	=	Fully qualified name of symbol
+ * 
+ * Returns:
+ * 		A given unqiue identifier for type
+ */
+ushort getControlId(string fqn) {
+	import std.algorithm : countUntil;
+	ptrdiff_t index = idFromName.countUntil(fqn);
+	if (index < 0) {
+		idFromName ~= fqn;
+		index = idFromName.length - 1;
+	}
+
+	return cast(ushort)(index + 1);
 }

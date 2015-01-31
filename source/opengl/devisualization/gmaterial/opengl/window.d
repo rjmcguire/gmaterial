@@ -22,11 +22,8 @@
  * SOFTWARE.
  */
 module devisualization.gmaterial.opengl.window;
-import devisualization.gmaterial.opengl.layout;
-import devisualization.gmaterial.opengl.defs;
-import devisualization.gmaterial.interfaces.window;
-import devisualization.gmaterial.interfaces.layout;
-import devisualization.gmaterial.interfaces.styles;
+import devisualization.gmaterial.opengl;
+import devisualization.gmaterial.interfaces;
 import devisualization.scenegraph.interfaces;
 import devisualization.window.interfaces.window;
 import devisualization.window.interfaces.eventable;

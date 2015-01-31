@@ -22,11 +22,10 @@
  * SOFTWARE.
  */
 module devisualization.gmaterial.opengl.controls.papersheet;
-import devisualization.gmaterial.opengl.window;
 import devisualization.gmaterial.opengl.shaders.papersheet;
-import devisualization.gmaterial.opengl.defs;
+import devisualization.gmaterial.opengl;
+import devisualization.gmaterial.interfaces;
 import devisualization.gmaterial.interfaces.controls.papersheet;
-import devisualization.gmaterial.interfaces.window;
 import devisualization.scenegraph.interfaces;
 import devisualization.window.interfaces.context;
 import devisualization.window.interfaces.window;
@@ -48,7 +47,7 @@ class PaperSheet : Element2D, IPaperSheet, SmartWindowElement.Type  {
 	}
 
 	this(float x, float y, float width, float height) {
-		super(PaperSheet.elementType, x, y, width, height);
+		super(getControlId!PaperSheet, x, y, width, height);
 	}
 
 	/*
@@ -59,17 +58,6 @@ class PaperSheet : Element2D, IPaperSheet, SmartWindowElement.Type  {
 
 		Color_RGBA backgroundColor() { return backgroundColor_; }
 		void backgroundColor(Color_RGBA color) { backgroundColor_= color; }
-	}
-
-	/*
-	 * Element type parts
-	 * Can change the type id as needed
-	 */
-	@property static {
-		private ushort elementTypeId;
-
-		ushort elementType() { return elementTypeId; }
-		void elementType(ushort id) { elementTypeId = id; }
 	}
 
 	void setWindow(IMaterialWindow window) {
@@ -84,7 +72,7 @@ class PaperSheet : Element2D, IPaperSheet, SmartWindowElement.Type  {
 		auto vao = parts[0];
 		auto shader = parts[1];
 
-		window.graph.register(PaperSheet.elementType, (Element2D e) {
+		window.graph.register(getControlId!PaperSheet, (Element2D e) {
 			with(e.to!PaperSheet) {
 				vec2 position = vec2(x, (window.height - height) - y);
 				vec4 size = vec4(width, height, window.width, window.height);

@@ -28,10 +28,10 @@ import devisualization.window.window;
 
 void main() {
 	MaterialWindow window = new MaterialWindow(800, 600);
-	PaperSheet.elementType = 1;
 
 	window.addOnFirstDraw((Windowable) {
 		PaperSheet sheet = new PaperSheet(10, 10, 90, 90);
+
 		sheet.backgroundColor = Color_RGBA.fromUbyte(0, 0, 255, 128);
 		window.graph.add(sheet);
 	});

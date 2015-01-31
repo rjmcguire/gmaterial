@@ -22,7 +22,8 @@
  * SOFTWARE.
  */
 module devisualization.gmaterial.interfaces;
-public import devisualization.gmaterial.interfaces.control;
 public import devisualization.gmaterial.interfaces.layout;
+public import devisualization.gmaterial.interfaces.styles;
 public import devisualization.gmaterial.interfaces.window;
 public import devisualization.gmaterial.interfaces.controls;
+public import devisualization.gmaterial.interfaces.controlids;
