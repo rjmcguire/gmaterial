@@ -44,13 +44,13 @@ class MaterialAppStyle {
     this() {}
 
     this(string primary = "Indigo", string accentName = "Pink") {
-        primary_hue1 = palette.lookup(primary ~ " 500 - Primary");
-        primary_hue2 = palette.lookup(primary ~ " 100");
-        primary_hue3 = palette.lookup(primary ~ " 700");
+        primary_hue1 = *palette.lookup(primary ~ " 500 - Primary");
+        primary_hue2 = *palette.lookup(primary ~ " 100");
+        primary_hue3 = *palette.lookup(primary ~ " 700");
 
-        accent = palette.lookup(accentName ~ " A200");
-        accent_fallback1 = palette.lookup(accentName ~ " A100");
-        accent_fallback2 = palette.lookup(accentName ~ " A400");
+        accent = *palette.lookup(accentName ~ " A200");
+        accent_fallback1 = *palette.lookup(accentName ~ " A100");
+        accent_fallback2 = *palette.lookup(accentName ~ " A400");
     }
 
     @property {

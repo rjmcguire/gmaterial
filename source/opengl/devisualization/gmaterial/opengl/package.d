@@ -24,3 +24,5 @@
 module devisualization.gmaterial.opengl;
 public import devisualization.gmaterial.opengl.layout;
 public import devisualization.gmaterial.opengl.window;
+public import devisualization.gmaterial.opengl.defs;
+public import devisualization.gmaterial.opengl.controls;

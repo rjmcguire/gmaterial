@@ -22,9 +22,19 @@
  * SOFTWARE.
  */
 module devisualization.gmaterial.app;
-import devisualization.gmaterial.interfaces;
 import devisualization.gmaterial.opengl;
+import devisualization.image;
+import devisualization.window.window;
 
 void main() {
-    IMaterialWindow window = new MaterialWindow(800, 600);
+	MaterialWindow window = new MaterialWindow(800, 600);
+	PaperSheet.elementType = 1;
+
+	window.addOnFirstDraw((Windowable) {
+		PaperSheet sheet = new PaperSheet(10, 10, 90, 90);
+		sheet.backgroundColor = Color_RGBA.fromUbyte(0, 0, 255, 128);
+		window.graph.add(sheet);
+	});
+
+	window.showAndRun(0);
 }

@@ -44,7 +44,7 @@ interface IPaperSheet {
         void backgroundColor(Color_RGBA);
     }
 
-    void seamButton(SeamButton/*, Button*/);
-    void removeSeamButton(SeamButton);
-    void clearSeamButtons();
+    //void seamButton(SeamButton/*, Button*/);
+    //void removeSeamButton(SeamButton);
+    //void clearSeamButtons();
 }

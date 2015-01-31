@@ -25,19 +25,27 @@ module devisualization.gmaterial.interfaces.window;
 import devisualization.gmaterial.interfaces.layout;
 import devisualization.gmaterial.interfaces.styles;
 import devisualization.window.interfaces.window;
+import devisualization.window.interfaces.eventable;
 import devisualization.scenegraph.interfaces;
 
 interface IMaterialWindow {
 	//this(uint width, uint height);
-	//this(Windowable window);
-	//this(Windowable window, SceneGraph2D graph);
+	//this(Windowable window, uint width, uint height);
+	//this(Windowable window, uint width, uint height, SceneGraph2D graph);
 
     @property {
         ILayout layout();
         SceneGraph2D graph();
         Windowable window();
         MaterialAppStyle appStyle();
+
+		uint width();
+		uint height();
     }
+
+	void showAndRun(ushort tickSleep = 25);
+
+	mixin IEventing!("onFirstDraw", Windowable);
 }
 
 alias WindowIsNotMaterialUsable = Exception;

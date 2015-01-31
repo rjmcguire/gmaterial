@@ -23,20 +23,24 @@
  */
 module devisualization.gmaterial.opengl.window;
 import devisualization.gmaterial.opengl.layout;
+import devisualization.gmaterial.opengl.defs;
 import devisualization.gmaterial.interfaces.window;
 import devisualization.gmaterial.interfaces.layout;
 import devisualization.gmaterial.interfaces.styles;
 import devisualization.scenegraph.interfaces;
 import devisualization.window.interfaces.window;
+import devisualization.window.interfaces.eventable;
 
 class MaterialWindow : IMaterialWindow {
     private {
-        Windowable self;
         SceneGraph2D graph_;
         Layout layout_;
         MaterialAppStyle style_;
+
+		uint width_, height_;
     }
 
+	Windowable self;
     alias self this;
 
     /**
@@ -47,39 +51,66 @@ class MaterialWindow : IMaterialWindow {
         import devisualization.window.window;
         import devisualization.window.interfaces.context;
 
+		width_ = width;
+		height_ = height;
+
         self = new Window(width, height, ""w, 0, 0, WindowContextType.Opengl3Plus);
-        self.show();
 
         commonSetup1();
         commonSetup2();
-        checkSetup();
-
-        Window.messageLoop();
+        //checkSetup();
     }
 
     /**
      * Given a window with a valid OpenGL context create the instance.
      * Does not run the event loop on the window. That's user code.
      */
-    this(Windowable window) {
+	this(Windowable window, uint _width, uint _height) {
         self = window;
+		width_ = _width;
+		height_ = _height;
         
         commonSetup1();
         commonSetup2();
-        checkSetup();
+        //checkSetup();
     }
 
     /**
      * Given both an already created window with OpenGL context and a 2D compaitble scenegraph create the instance.
      * Does not run the event loop on the window. That's user code.
+     * 
+     * You will need to configure the graph to auto set the window on 2d elements
      */
-    this(Windowable window, SceneGraph2D graph) {
+	this(Windowable window, uint _width, uint _height, SceneGraph2D graph) {
         self = window;
-        graph_ = graph;
+		width_ = _width;
+		height_ = _height;
+		graph_ = graph;
 
         commonSetup2();
         checkSetup();
     }
+
+	void showAndRun(ushort tickSleep = 25) {
+		import devisualization.window.window;
+		self.show;
+
+		while(true) {
+			import core.thread : Thread;
+			import core.time : dur;
+			Window.messageLoopIteration();
+			
+			IContext context = self.context;
+			if (self.hasBeenClosed)
+				break;
+			else if (context !is null) {
+				self.onDraw;
+			}
+
+			if (tickSleep > 0)
+				Thread.sleep(dur!"msecs"(tickSleep));
+		}
+	}
 
     @property {
         Windowable window() {
@@ -97,13 +128,34 @@ class MaterialWindow : IMaterialWindow {
         MaterialAppStyle appStyle() {
             return style_;
         }
+
+		uint width() { return width_; }
+		uint height() { return height_; }
     }
 
     private {
         void commonSetup1() {
             import devisualization.scenegraph.base.overlayed;
             // this should be replaced with a 2d specific one. Aka one that doesn't support 3d.
-            SceneGraph3DOverlayed2D graph = new SceneGraph3DOverlayed2D(self);
+
+			alias gthis = this;
+
+			class MyRoot2d : Element2D {
+				this() {
+					super(0, 0, 0, 0, 0);
+					elements = new SmartWindowElement(gthis);
+				}
+			}
+
+			class MyGraph : SceneGraph3DOverlayed2D {
+				this() {
+					super(self);
+					root_2d = new MyRoot2d;
+				}
+			}
+
+			MyGraph graph = new MyGraph;
+
             graph.clearBuffers = () {
                 import devisualization.util.opengl.function_wrappers;
                 glClear(false, true, false);
@@ -114,6 +166,42 @@ class MaterialWindow : IMaterialWindow {
         void commonSetup2() {
             layout_ = new Layout;
             style_ = new MaterialAppStyle;
+
+			void FirstResizeFunc(Windowable, uint w, uint h) {
+				width_ = w;
+				height_ = h;
+			}
+			self.addOnResize(&FirstResizeFunc);
+
+			void FirstDrawHook(Windowable) {
+				import devisualization.util.opengl;
+				self.removeOnDraw(&FirstDrawHook);
+
+				self.context.activate;
+
+				self.addOnDraw((Windowable) {
+					glClearColor(1, 1, 1, 1);
+					glClear(true,true, true);
+					
+					glEnable(EnableFunc.Blend);
+					glBlendFunc(BlendFactors.SrcAlpha, BlendFactors.OneMinusSrcAlpha);
+					
+					graph_.draw;
+					self.context.swapBuffers;
+				});
+
+				self.addOnResize((Windowable, uint w, uint h) {
+					glViewport(0, 0, w, h);
+
+					width_ = w;
+					height_ = h;
+				});
+
+				self.removeOnResize(&FirstResizeFunc);
+				onFirstDraw(this);
+			}
+	
+			self.addOnDraw(&FirstDrawHook);
         }
 
         void checkSetup() {
@@ -130,4 +218,6 @@ class MaterialWindow : IMaterialWindow {
             }
         }
     }
+
+	mixin Eventing!("onFirstDraw", Windowable);
 }
