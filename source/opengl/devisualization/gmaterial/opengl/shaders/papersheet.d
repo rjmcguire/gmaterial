@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 module devisualization.gmaterial.opengl.shaders.papersheet;
+import devisualization.gmaterial.opengl.assets;
 import devisualization.util.opengl.shaders.defs;
 import devisualization.util.opengl.vertexarray;
 import devisualization.util.opengl.buffers;
@@ -35,7 +36,41 @@ import gl3n.linalg : vec4, mat4;
  */
 class PaperSheetShader : ShaderProgram {
 	this() {
-		super("""
+		super(VertexShaders["papersheet.vert"], FragmentShaders["papersheet.frag"]);
+	}
+	
+	@disable {
+		this(string vert, string frag=null, string geom=null){}
+		this(Shader vert = null, Shader frag = null, Shader geom = null){}
+	}
+
+	@property {
+		void position(vec2 v) {
+			uniform("location", v);
+		}
+		
+		void size(vec4 m) {
+			uniform("size", m);
+		}
+
+		void myColor(Color_RGBA c) {
+			uniform("color", vec4(c.r, c.g, c.b, c.a));
+		}
+
+		void light(bool key, bool ambient) {
+			uniform("keyLight", key);
+			uniform("ambientLight", ambient);
+		}
+		
+		void myVertices(VertexArray vao, IBuffer buffer) {
+			import devisualization.util.opengl.function_wrappers.v20 : AttribPointerType;
+			vao.bindAttribute(this, "position", buffer, AttribPointerType.Float, 2);
+		}
+	}
+}
+
+shared static this() {
+	VertexShaders.registerDefault("papersheet.vert", """
 #if __VERSION__ > 120
     #version 130
     in vec4 position;
@@ -47,8 +82,9 @@ class PaperSheetShader : ShaderProgram {
 void main() {
     gl_Position = position;
 }
-""",
-"""
+""");
+
+	FragmentShaders.registerDefault("papersheet.frag", """
 #version 130
 uniform vec2 location;
 uniform vec4 size;
@@ -144,34 +180,4 @@ void main() {
     }
 }
 """);
-	}
-	
-	@disable {
-		this(string vert, string frag=null, string geom=null){}
-		this(Shader vert = null, Shader frag = null, Shader geom = null){}
-	}
-
-	@property {
-		void position(vec2 v) {
-			uniform("location", v);
-		}
-		
-		void size(vec4 m) {
-			uniform("size", m);
-		}
-
-		void myColor(Color_RGBA c) {
-			uniform("color", vec4(c.r, c.g, c.b, c.a));
-		}
-
-		void light(bool key, bool ambient) {
-			uniform("keyLight", key);
-			uniform("ambientLight", ambient);
-		}
-		
-		void myVertices(VertexArray vao, IBuffer buffer) {
-			import devisualization.util.opengl.function_wrappers.v20 : AttribPointerType;
-			vao.bindAttribute(this, "position", buffer, AttribPointerType.Float, 2);
-		}
-	}
 }

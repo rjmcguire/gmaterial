@@ -21,9 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-module devisualization.gmaterial.opengl;
-public import devisualization.gmaterial.opengl.layout;
-public import devisualization.gmaterial.opengl.window;
-public import devisualization.gmaterial.opengl.defs;
-public import devisualization.gmaterial.opengl.controls;
-public import devisualization.gmaterial.opengl.assets;
+module devisualization.gmaterial.opengl.assets;
+import devisualization.util.core.assetmanager;
+
+AssetManager!string VertexShaders = void;
+AssetManager!string FragmentShaders = void;
+
+shared static this() {
+	VertexShaders = AssetManager!string("shaders/vertex", "gmaterial", "Devisualization");
+	FragmentShaders = AssetManager!string("shaders/fragment", "gmaterial", "Devisualization");
+}
